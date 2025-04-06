@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container">
         <a class="navbar-brand" href="#">LinkUp</a>
-
-
+        <!-- *ngIf="loggedIn" -->
+        @if(loggedIn){
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
                 <a class="nav-link">Matches</a>
@@ -13,7 +13,24 @@
             <li class="nav-item">
                 <a class="nav-link">Messages</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logout()">logout</a>
+            </li>
         </ul>
+        }
+        @if(loggedIn){
+        <div dropdown class="dropdown">
+            <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">welcome user</a>
+            <div *dropdownMenu class="dropdown-menu">
+                <a class="dropdown-item">Edit Profile</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" (click)="logout()">logout</a>
+            </div>
+
+        </div>
+
+        }
+        @if(!loggedIn){
         <form #loginForm="ngForm" (ngSubmit)="login()" class="d-flex" autocomplete="off">
             <input name="username" [(ngModel)]="model.username" class="form-control me-2" type="text"
                 placeholder="Username">
@@ -21,5 +38,8 @@
                 placeholder="Password">
             <button class="btn btn-outline-success" type="submit">login</button>
         </form>
+
+        }
+
     </div>
 </nav>
