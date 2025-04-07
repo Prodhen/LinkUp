@@ -19,7 +19,6 @@ public class AccountController : BaseApiController
         this._context = context;
         this._tokenService = tokenService;
 
-
     }
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
