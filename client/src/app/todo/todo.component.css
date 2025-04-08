@@ -1,0 +1,69 @@
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+h1,
+h2 {
+    text-align: center;
+    color: #007bff;
+}
+
+.add-todo {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #777;
+}
+
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+}
+
+/* ... existing CSS ... */
+
+.list-group-item>div:first-child {
+    /* Target the main content div */
+    flex-grow: 1;
+    /* Allow it to take up available space */
+    align-items: center;
+}
+
+.list-group-item .form-control-sm {
+    max-width: 150px;
+    /* Adjust as needed */
+    margin-right: 0.5rem;
+}
+
+.list-group-item .form-control-sm[type="date"] {
+    max-width: 120px;
+    /* Adjust date input width */
+}
+
+.list-group-item .form-check-input-sm {
+    margin-right: 0.2rem;
+}
+
+.list-group-item .form-check-label.small {
+    font-size: 0.8rem;
+}
+
+textarea.form-control {
+    height: 15px;
+}

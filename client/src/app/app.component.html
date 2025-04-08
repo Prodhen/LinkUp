@@ -11,7 +11,20 @@
 
     </ul> -->
     <div class="container" style="margin-top: 100px;">
+
+        <!-- @if(token!=null){ -->
+        @if(!accountService.currentUser()){
         <app-home></app-home>
+
+        }
+        @if(accountService.currentUser()){
+        <app-todo></app-todo>
+
+        }
+
+
+
+
     </div>
 
 </div>

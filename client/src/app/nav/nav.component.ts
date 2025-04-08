@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms'
 import { AccountService } from '../_service/account.service';
-import { NgIf } from '@angular/common';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { Observable } from 'rxjs';
+import { User } from '../_models/user';
 
 @Component({
   selector: 'app-nav',
@@ -15,6 +16,10 @@ export class NavComponent {
   private accountService = inject(AccountService);
   model: any = {};
   loggedIn = false;
+  currentUser = this.accountService.currentUser.asReadonly();
+  ngOnInit(): void {
+    this.accountService.setCurrentUser();
+  }
   login() {
 
     console.log(this.model);
@@ -28,8 +33,31 @@ export class NavComponent {
       }
     )
   }
+
+  setCurrentUser() {
+    console.log("setCurrentUser");
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      try {
+        const user: User = JSON.parse(userString);
+        this.accountService.currentUser.set(user);
+        console.log("afterSet", user);
+      } catch (error) {
+        console.error('Error parsing user from localStorage:', error);
+        localStorage.removeItem('user'); // Clear invalid data
+        this.accountService.currentUser.set(null);
+      }
+    }
+  }
+  getUserImageUrl(): string {
+    const user = this.currentUser();
+    console.log(user);
+    return user?.picture
+      ? `http://localhost:5050${user.picture}`
+      : 'assets/default-profile.png'; // your Angular asset
+  }
   logout() {
-    this.loggedIn = false;
+    this.accountService.logout();
   }
 
 }

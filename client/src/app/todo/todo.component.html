@@ -1,0 +1,68 @@
+<div class="container">
+    <h1>My Todos</h1>
+
+    <div class="add-todo">
+        <h2>Add New Todo</h2>
+        <form #addForm="ngForm" (ngSubmit)="addTodo()">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="title" name="title" [(ngModel)]="newTodo.title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description"
+                    [(ngModel)]="newTodo.description"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="dueDate" class="form-label">Due Date (Optional)</label>
+                <input type="date" class="form-control" id="dueDate" name="dueDate" [(ngModel)]="newTodo.dueDate">
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!addForm.valid">Add</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <ul class="list-group">
+        <li *ngFor="let todo of todos" class="list-group-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center" *ngIf="editingTodo?.id !== todo.id">
+                <input type="checkbox" class="form-check-input me-2" [checked]="todo.isCompleted"
+                    (change)="toggleComplete(todo)">
+                <span [ngClass]="{'completed': todo.isCompleted}">{{ todo.title }}</span>
+                <small *ngIf="todo.dueDate" class="ms-2">(Due: {{ todo.dueDate | date:'yyyy-MM-dd' }})</small>
+                <p *ngIf="todo.description" class="ms-2 mb-0"><small>{{ todo.description }}</small></p>
+            </div>
+            <div class="d-flex align-items-center flex-wrap" *ngIf="editingTodo?.id === todo.id">
+                <input type="text" class="form-control form-control-sm me-2 mb-1" id="editTitle" name="editTitle"
+                    [(ngModel)]="editedTodo.title" placeholder="Title" required>
+                <textarea class="form-control form-control-sm me-2 mb-1" id="editDescription" name="editDescription"
+                    [(ngModel)]="editedTodo.description" placeholder="Description"></textarea>
+                <input type="date" class="form-control form-control-sm me-2 mb-1" id="editDueDate" name="editDueDate"
+                    [(ngModel)]="editedTodo.dueDate">
+                <div class="form-check me-2 mb-1">
+                    <input type="checkbox" class="form-check-input form-check-input-sm" id="editIsCompleted"
+                        name="editIsCompleted" [(ngModel)]="editedTodo.isCompleted">
+                    <label class="form-check-label small" for="editIsCompleted">Completed</label>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <button *ngIf="editingTodo?.id !== todo.id" class="btn btn-sm btn-primary me-2" (click)="editTodo(todo)"
+                    aria-label="Edit">
+                    <i class="fa fa-pencil"></i>
+                </button>
+                <div *ngIf="editingTodo?.id === todo.id">
+                    <button class="btn btn-sm btn-success me-2" (click)="saveEditedTodo()" aria-label="Save">
+                        <i class="fa fa-check"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary me-2" (click)="cancelEdit()" aria-label="Cancel">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <button class="btn btn-sm btn-danger" (click)="deleteTodo(todo)" aria-label="Delete">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+        </li>
+        <li *ngIf="todos.length === 0" class="list-group-item">No todos yet. Add some!</li>
+    </ul>
+</div>
