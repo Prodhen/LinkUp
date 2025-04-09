@@ -1,4 +1,3 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
 using API.Data;
@@ -7,29 +6,59 @@ using API.Entities;
 using API.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace API.Controllers;
-
 public class AccountController : BaseApiController
 {
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
-    public AccountController(DataContext context, ITokenService tokenService)
+    private readonly IWebHostEnvironment _environment;
+    public AccountController(DataContext context, ITokenService tokenService, IWebHostEnvironment environment)
     {
         this._context = context;
         this._tokenService = tokenService;
+        this._environment = environment;
 
     }
     [HttpPost("register")]
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
         if (await UserExists(registerDto.UserName)) return BadRequest("User name is taken already");
+
+        if (registerDto.Picture == null || registerDto.Picture.Length == 0)
+        {
+            return BadRequest("Please upload a picture.");
+        }
+
+        var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        var uniqueFileName = $"{Guid.NewGuid()}_{registerDto.Picture.FileName}";
+        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        try
+        {
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await registerDto.Picture.CopyToAsync(stream);
+            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Failed to save the uploaded picture.");
+        }
+
+
+
         using var hmac = new HMACSHA512();
         var user = new AppUser
         {
             UserName = registerDto.UserName,
             PassWordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PassWordSalt = hmac.Key
+            PassWordSalt = hmac.Key,
+            PicturePath = $"/uploads/{uniqueFileName}"
         };
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -37,7 +66,8 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user)
+            Token = _tokenService.CreateToken(user),
+            Picture = user.PicturePath
         };
 
     }
@@ -56,7 +86,8 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user)
+            Token = _tokenService.CreateToken(user),
+            Picture = user.PicturePath,
         };
 
     }
@@ -65,5 +96,7 @@ public class AccountController : BaseApiController
         return await _context.Users.AnyAsync(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim());
 
     }
+
+
 
 }

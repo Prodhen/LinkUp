@@ -22,7 +22,8 @@ public class TokenService : ITokenService
         if (tokenKey.Length < 64) throw new Exception("Your token needs to be longer");
         var key=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
         var claims=new List<Claim>{
-            new Claim(ClaimTypes.NameIdentifier,user.UserName)
+            new Claim(ClaimTypes.NameIdentifier,Convert.ToString(user.Id) ),
+            new Claim(ClaimTypes.Name,user.UserName)
         };
         var creds=new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
         var tokenDescriptor=new SecurityTokenDescriptor{
