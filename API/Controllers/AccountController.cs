@@ -1,79 +1,27 @@
-using System.Security.Cryptography;
-using System.Text;
-using API.Data;
 using API.DTOs;
-using API.Entities;
-using API.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using API.Helper;
+using API.Services.Interface;
 namespace API.Controllers;
 public class AccountController : BaseApiController
 {
-    private readonly DataContext _context;
-    private readonly ITokenService _tokenService;
+    private readonly IUsersService _usersService;
 
-    public AccountController(DataContext context, ITokenService tokenService)
+    public AccountController(IUsersService usersService)
     {
-        this._context = context;
-        this._tokenService = tokenService;
-       
-
+        this._usersService = usersService;
     }
     [HttpPost("register")]
-    public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+    public async Task<ActionResult> Register(RegisterDto registerDto)
     {
-        if (await UserExists(registerDto.UserName)) return BadRequest("User name is taken already");
-
-
-        string uniqueFileName= await ImageHelper.ProcessPicture(registerDto.Picture);
-     
-
-        using var hmac = new HMACSHA512();
-        var user = new AppUser
-        {
-            UserName = registerDto.UserName,
-            PassWordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PassWordSalt = hmac.Key,
-            PicturePath = uniqueFileName
-        };
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-
-        return new UserDto
-        {
-            UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
-            Picture = user.PicturePath
-        };
+        var response = await _usersService.Register(registerDto);
+        return StatusCode(response.StatusCode, response);
 
     }
-
-
     [HttpPost("login")]
-    public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+    public async Task<ActionResult> Login(LoginDto loginDto)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName.ToLower().Trim() == loginDto.UserName.ToLower().Trim());
-        if (user == null) return Unauthorized("Invalid User Name.");
-        using var hmac = new HMACSHA512(user.PassWordSalt);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if (computedHash[i] != user.PassWordHash[i]) return Unauthorized("Invalid password");
-        }
-
-        return new UserDto
-        {
-            UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
-            Picture = user.PicturePath,
-        };
-
-    }
-    private async Task<bool> UserExists(string userName)
-    {
-        return await _context.Users.AnyAsync(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim());
-
+        var response = await _usersService.login(loginDto);
+        return StatusCode(response.StatusCode, response);
     }
 
 

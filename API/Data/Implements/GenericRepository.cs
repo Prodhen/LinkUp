@@ -47,5 +47,17 @@ namespace API.Data.Implements
         {
             return await _context.Set<T>().Where(predicate).ToListAsync();
         }
+        public async Task<T> GetWhere(Expression<Func<T, bool>> where, params Expression<Func<T, object>>[] include)
+        {
+            var query = _context.Set<T>().AsQueryable();
+            if (include != null && include.Count() > 0)
+            {
+                foreach (var item in include)
+                {
+                    query = query.Include(item);
+                }
+            }
+            return await query.Where(where).FirstOrDefaultAsync();
+        }
     }
 }
