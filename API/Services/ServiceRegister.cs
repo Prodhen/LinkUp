@@ -12,6 +12,7 @@ public static class ServiceRegister
         service.AddScoped<IUnitOfWork, UnitOfWork>();
         service.AddHttpContextAccessor();
         service.AddScoped<ITodosService, TodosService>();
+        service.AddScoped<IUsersService, UserService>();
 
     }
 
