@@ -75,6 +75,7 @@ public class TodosService : ITodosService
         existingTodoItem.IsCompleted = todoItemDto.IsCompleted;
         existingTodoItem.CompletedDate = todoItemDto.IsCompleted == true ? DateTime.Now : null;
         _unitOfWork.Todos.Update(existingTodoItem);
+        await _unitOfWork.SaveAsync();
 
         var response = new TodoItemDto
         {

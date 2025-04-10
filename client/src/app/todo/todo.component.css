@@ -67,3 +67,28 @@ h2 {
 textarea.form-control {
     height: 15px;
 }
+
+.add-todo-container {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.add-todo-header {
+    cursor: pointer;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+}
+
+.add-todo-form {
+    overflow: hidden;
+    /* To enable smooth collapsing */
+    max-height: 500px;
+    /* Initial max height, adjust as needed */
+    transition: max-height 0.3s ease-in-out;
+}
+
+.add-todo-form.collapsed {
+    max-height: 0;
+}

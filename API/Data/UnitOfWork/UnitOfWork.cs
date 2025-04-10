@@ -39,13 +39,8 @@ public class UnitOfWork : IUnitOfWork
 
     public Task<int> SaveAsync()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<int> SaveChangeAsync()
-    {
         return _dataContext.SaveChangesAsync();
     }
- 
+
 
 }

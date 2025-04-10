@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "P3FZ/HU1Dy64/lsJm2YznhWFMMlrLTNiWNGY2qeG3Nc=",
+  "Hash": "8O7a7G617KDiQ7JS8c4W2WIaJOpeB/iubJp3ojbmeEU=",
   "Source": "API",
   "BasePath": "_content/API",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "D:\\LinkUp\\API\\wwwroot\\uploads\\34aed929-5a27-4f67-82fe-12d97d69466d_344800282_199787262858753_3618355044938992368_n.jpg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\LinkUp\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "uploads/34aed929-5a27-4f67-82fe-12d97d69466d_344800282_199787262858753_3618355044938992368_n.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\34aed929-5a27-4f67-82fe-12d97d69466d_344800282_199787262858753_3618355044938992368_n.jpg"
+    },
     {
       "Identity": "D:\\LinkUp\\API\\wwwroot\\uploads\\57ba45a4-e9c0-4414-b839-538671b2f0a6_344800282_199787262858753_3618355044938992368_n.jpg",
       "SourceId": "API",
@@ -53,6 +72,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\8f9e0097-a09d-402a-8b27-a1188d906396_rsz_1saddampicture300_300-removebg-preview.jpg"
+    },
+    {
+      "Identity": "D:\\LinkUp\\API\\wwwroot\\uploads\\baf1a1fd-7593-44aa-b612-58eed08ad503_344800282_199787262858753_3618355044938992368_n.jpg",
+      "SourceId": "API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\LinkUp\\API\\wwwroot\\",
+      "BasePath": "_content/API",
+      "RelativePath": "uploads/baf1a1fd-7593-44aa-b612-58eed08ad503_344800282_199787262858753_3618355044938992368_n.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\baf1a1fd-7593-44aa-b612-58eed08ad503_344800282_199787262858753_3618355044938992368_n.jpg"
     },
     {
       "Identity": "D:\\LinkUp\\API\\wwwroot\\uploads\\da4fbddd-60f2-4090-941c-1a617bba3d79_363335389_301158795811926_2255133263623401571_n.jpg",

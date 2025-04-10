@@ -10,6 +10,7 @@ interface TodoItem {
   description?: string | null;
   isCompleted?: boolean | null;
   dueDate?: Date | null;
+  completedDate?: Date | null;
   userId: number;
 }
 
@@ -40,17 +41,21 @@ export class TodoComponent implements OnInit {
   editingTodo: TodoItem | null = null;
   editedTodo: TodoItemUpdateDto = { id: 0, title: '', description: null, dueDate: null, isCompleted: false };
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5050/api/Todos'; // Adjust your API URL
+  private apiUrl = 'http://localhost:5050/api/Todos'; 
   private accountService = inject(AccountService);
+  isAddTodoVisible: boolean = false; 
 
   ngOnInit(): void {
     this.loadTodos();
   }
+  toggleAddTodo() {
+    this.isAddTodoVisible = !this.isAddTodoVisible;
+  }
 
   loadTodos(): void {
-    this.http.get<TodoItem[]>(this.apiUrl, this.getAuthHeaders()).subscribe({
-      next: (data) => {
-        this.todos = data;
+    this.http.get<{ message: string | null; data: TodoItem[] }>(this.apiUrl, this.getAuthHeaders()).subscribe({
+      next: (response) => {
+        this.todos = response.data; 
       },
       error: (error) => {
         console.error('Error loading todos:', error);
