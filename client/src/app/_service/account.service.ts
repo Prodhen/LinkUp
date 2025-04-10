@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../_models/user';
+import { Response } from '../_models/response';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -14,8 +15,9 @@ export class AccountService {
     return this.currentUser()?.token || null;
   }
   login(model: any) {
-    return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
-      map(user => {
+    return this.http.post<Response<User>>(this.baseUrl + 'account/login', model).pipe(
+      map(response => {
+        const user = response.data;
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
@@ -25,8 +27,9 @@ export class AccountService {
   }
 
   register(formData: FormData) {
-    return this.http.post<User>(this.baseUrl + 'account/register', formData).pipe(
-      map(user => {
+    return this.http.post<Response<User>>(this.baseUrl + 'account/register', formData).pipe(
+      map(response => {
+        const user = response.data;
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
@@ -34,7 +37,7 @@ export class AccountService {
         }
         return user;
       })
-    )
+    );
   }
 
   setCurrentUser() {

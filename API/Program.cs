@@ -1,6 +1,7 @@
 using System.Text;
 using API.Data;
 using API.Extensions;
+using API.Helper;
 using API.Interface;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,4 +22,5 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+ImageHelper.Initialize(app.Environment);
 app.Run();

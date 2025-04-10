@@ -41,9 +41,9 @@ export class TodoComponent implements OnInit {
   editingTodo: TodoItem | null = null;
   editedTodo: TodoItemUpdateDto = { id: 0, title: '', description: null, dueDate: null, isCompleted: false };
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5050/api/Todos'; 
+  private apiUrl = 'http://localhost:5050/api/Todos';
   private accountService = inject(AccountService);
-  isAddTodoVisible: boolean = false; 
+  isAddTodoVisible: boolean = false;
 
   ngOnInit(): void {
     this.loadTodos();
@@ -55,7 +55,7 @@ export class TodoComponent implements OnInit {
   loadTodos(): void {
     this.http.get<{ message: string | null; data: TodoItem[] }>(this.apiUrl, this.getAuthHeaders()).subscribe({
       next: (response) => {
-        this.todos = response.data; 
+        this.todos = response.data;
       },
       error: (error) => {
         console.error('Error loading todos:', error);
@@ -69,6 +69,7 @@ export class TodoComponent implements OnInit {
         next: (response) => {
           this.todos.unshift(response); // Add new todo to the beginning of the list
           this.newTodo = { title: '', description: null, dueDate: null }; // Clear the form
+          this.loadTodos();
         },
         error: (error) => {
           console.error('Error adding todo:', error);
