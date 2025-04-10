@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../_service/account.service';
+import { environment } from '../../environment/environment';
+import { ToastrService } from 'ngx-toastr';
 
 interface TodoItem {
   id: number;
@@ -41,7 +43,8 @@ export class TodoComponent implements OnInit {
   editingTodo: TodoItem | null = null;
   editedTodo: TodoItemUpdateDto = { id: 0, title: '', description: null, dueDate: null, isCompleted: false };
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5050/api/Todos';
+  private toastr = inject(ToastrService);
+  private apiUrl = environment.apiUrl + '/api/' + 'todos';
   private accountService = inject(AccountService);
   isAddTodoVisible: boolean = false;
 
@@ -65,10 +68,11 @@ export class TodoComponent implements OnInit {
 
   addTodo(): void {
     if (this.newTodo.title.trim()) {
-      this.http.post<TodoItem>(this.apiUrl, this.newTodo, this.getAuthHeaders()).subscribe({
+      this.http.post<TodoItem>(`${this.apiUrl}/add`, this.newTodo, this.getAuthHeaders()).subscribe({
         next: (response) => {
           this.todos.unshift(response); // Add new todo to the beginning of the list
           this.newTodo = { title: '', description: null, dueDate: null }; // Clear the form
+          this.toastr.success('Todo added successfully!', 'Success');
           this.loadTodos();
         },
         error: (error) => {

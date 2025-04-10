@@ -3,13 +3,14 @@ import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { Response } from '../_models/response';
 import { map } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   private http = inject(HttpClient);
-  baseUrl = 'http://localhost:5050/api/';
+  baseUrl = environment.apiUrl + '/api/';
   currentUser = signal<User | null>(null);
   get authToken(): string | null {
     return this.currentUser()?.token || null;

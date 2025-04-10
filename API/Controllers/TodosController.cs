@@ -25,7 +25,7 @@ namespace API.Controllers
             var response = await _todosService.GetTodoItemById(id);
             return StatusCode(response.StatusCode, response);
         }
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<ActionResult> PostTodoItem(TodoItemAddDto todoAddDto)
         {
             var response = await _todosService.AddTodoItem(todoAddDto);

@@ -4,6 +4,7 @@ import { AccountService } from '../_service/account.service';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
+import { environment } from '../../environment/environment';
 
 @Component({
   selector: 'app-nav',
@@ -16,6 +17,7 @@ export class NavComponent {
   private accountService = inject(AccountService);
   model: any = {};
   loggedIn = false;
+  private apiUrl = environment.apiUrl;
   currentUser = this.accountService.currentUser.asReadonly();
   ngOnInit(): void {
     this.accountService.setCurrentUser();
@@ -44,7 +46,7 @@ export class NavComponent {
         console.log("afterSet", user);
       } catch (error) {
         console.error('Error parsing user from localStorage:', error);
-        localStorage.removeItem('user'); // Clear invalid data
+        localStorage.removeItem('user');
         this.accountService.currentUser.set(null);
       }
     }
@@ -53,8 +55,8 @@ export class NavComponent {
     const user = this.currentUser();
     console.log(user);
     return user?.picture
-      ? `http://localhost:5050${user.picture}`
-      : 'assets/default-profile.png'; // your Angular asset
+      ? `${this.apiUrl}${user.picture}`//have to change
+      : 'assets/default-profile.png';
   }
   logout() {
     this.accountService.logout();
