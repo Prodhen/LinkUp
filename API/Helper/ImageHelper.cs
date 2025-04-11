@@ -4,7 +4,7 @@ namespace API.Helper
 {
     public static class ImageHelper
     {
-        private static  IWebHostEnvironment _environment;
+        private static IWebHostEnvironment _environment;
         public static void Initialize(IWebHostEnvironment environment)
         {
             _environment = environment;
@@ -13,7 +13,7 @@ namespace API.Helper
         {
             if (formFile == null || formFile.Length == 0)
             {
-                return "Please upload a picture.";
+                return null;
             }
 
             var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
@@ -34,11 +34,11 @@ namespace API.Helper
                     await formFile.CopyToAsync(stream);
                 }
 
-                return picturePath; 
+                return picturePath;
             }
             catch (Exception ex)
             {
-                return $"Error uploading file: {ex.Message}"; 
+                return $"Error uploading file: {ex.Message}";
             }
         }
 

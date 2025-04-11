@@ -8,19 +8,28 @@ using API.Entities;
 using API.Helper;
 using API.Interface;
 using API.Services.Interface;
+using FluentValidation;
 namespace API.Services.Implements;
 public class UserService : IUsersService
 {
     private readonly IUnitOfWork _unitOfWork;
     private ITokenService _tokenService;
-    public UserService(IUnitOfWork unitOfWork, ITokenService tokenService)
+    private IValidator<RegisterDto> _regValidator;
+    public UserService(IUnitOfWork unitOfWork, ITokenService tokenService, IValidator<RegisterDto> regValidator)
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+        _regValidator = regValidator;
     }
     public async Task<ResponseDto> Register(RegisterDto registerDto)
     {
         // var userId = _unitOfWork.LoggedInUserId();
+        var validationResult = await _regValidator.ValidateAsync(registerDto);
+
+        if (!validationResult.IsValid)
+        {
+            return Utilities.ValidationErrorResponse(ErrorHelper.FluentErrorMessages(validationResult.Errors));
+        }
 
         if (await UserExists(registerDto.UserName)) return Utilities.ValidationErrorResponse("User name is taken already");
         string uniqueFileName = await ImageHelper.ProcessPicture(registerDto.Picture);

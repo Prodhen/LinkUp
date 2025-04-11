@@ -1,6 +1,7 @@
 import { Component, inject, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../_service/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -11,8 +12,15 @@ import { AccountService } from '../_service/account.service';
 })
 export class RegisterComponent {
   private accountService = inject(AccountService);
+  private toastr = inject(ToastrService);
   cancelRegister = output<boolean>();
-  model: any = {}
+  // model = {
+  //   username: '',
+  //   password: '',
+  //   picture: null
+  // }
+
+  model: any = { }
 
   onFileSelected(event: any) {
     if (event.target.files && event.target.files.length > 0) {
@@ -21,6 +29,11 @@ export class RegisterComponent {
   }
 
   register() {
+    if (!this.model.username || !this.model.password) {
+      this.toastr.error('Username and password are required', 'Validation Error');
+      return;
+    }
+
     console.log(this.model);
     const formData = new FormData();
     formData.append('username', this.model.username);
@@ -33,10 +46,23 @@ export class RegisterComponent {
     this.accountService.register(formData).subscribe({
       next: response => {
         console.log(response);
+        this.toastr.success('Registration successful', 'Success');
         this.cancel();
       },
-      error: error => console.log(error)
-    })
+      error: (err) => {
+        console.log(err);
+
+        if (err.error?.data && Array.isArray(err.error.data)) {
+          for (let msg of err.error.data) {
+            this.toastr.error(msg, 'Validation Error');
+          }
+        } else if (err.error?.message) {
+          this.toastr.error(err.error.message, 'Error');
+        } else {
+          this.toastr.error('Something went wrong', 'Error');
+        }
+      }
+    });
   }
 
   cancel() {

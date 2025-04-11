@@ -4,6 +4,7 @@ using API.Extensions;
 using API.Helper;
 using API.Interface;
 using API.Services;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.Register();
-
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 // Configure the HTTP request pipeline.

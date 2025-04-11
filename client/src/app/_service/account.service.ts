@@ -4,12 +4,14 @@ import { User } from '../_models/user';
 import { Response } from '../_models/response';
 import { map } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   private http = inject(HttpClient);
+  private toastr = inject(ToastrService);
   baseUrl = environment.apiUrl + '/api/';
   currentUser = signal<User | null>(null);
   get authToken(): string | null {
