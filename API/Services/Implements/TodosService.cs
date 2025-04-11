@@ -23,6 +23,8 @@ public class TodosService : ITodosService
     public async Task<ResponseDto> GetAllTodoItems()
     {
         var response = await _unitOfWork.Todos.GetAll(x => x.UserId == _unitOfWork.LoggedInUserId() && x.IsDeleted == false);
+
+
         return Utilities.SuccessResponseForGet(response);
     }
 
@@ -39,7 +41,7 @@ public class TodosService : ITodosService
         {
             Title = todoAddDto.Title,
             Description = todoAddDto.Description,
-            DueDate = todoAddDto.DueDate,
+            DueDate = todoAddDto.DueDate != null ? todoAddDto.DueDate.Value.Date : null,
             UserId = userId,
             IsDeleted = false,
             IsCompleted = false,
@@ -55,7 +57,7 @@ public class TodosService : ITodosService
             Id = todoItem.Id,
             Title = todoItem.Title,
             Description = todoItem.Description,
-            DueDate = todoItem.DueDate,
+            DueDate = todoItem.DueDate != null ? todoItem.DueDate.Value.ToString("yyyy-MM-dd") : null,
             IsCompleted = todoItem.IsCompleted,
             CompletedDate = todoItem.CompletedDate,
             CreatedDate = todoItem.CreatedDate,
@@ -82,7 +84,7 @@ public class TodosService : ITodosService
             Id = existingTodoItem.Id,
             Title = existingTodoItem.Title,
             Description = existingTodoItem.Description,
-            DueDate = existingTodoItem.DueDate,
+            DueDate = existingTodoItem.DueDate != null ? existingTodoItem.DueDate.Value.ToString("yyyy-MM-dd") : null,
             IsCompleted = existingTodoItem.IsCompleted,
             CompletedDate = existingTodoItem.CreatedDate,
             CreatedDate = existingTodoItem.CreatedDate,

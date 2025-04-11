@@ -6,11 +6,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedTodoItems : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    PassWordHash = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PassWordSalt = table.Column<byte[]>(type: "BLOB", nullable: false),
+                    PicturePath = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "TodoItems",
                 columns: table => new
@@ -23,6 +39,8 @@ namespace API.Data.Migrations
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: true),
                     DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CompletedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -47,6 +65,9 @@ namespace API.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "TodoItems");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }
