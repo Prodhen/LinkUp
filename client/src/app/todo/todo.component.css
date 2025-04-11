@@ -36,24 +36,23 @@ h2 {
     padding: 0.2rem 0.5rem;
 }
 
-/* ... existing CSS ... */
 
 .list-group-item>div:first-child {
-    /* Target the main content div */
+
     flex-grow: 1;
-    /* Allow it to take up available space */
+
     align-items: center;
 }
 
 .list-group-item .form-control-sm {
     max-width: 150px;
-    /* Adjust as needed */
+
     margin-right: 0.5rem;
 }
 
 .list-group-item .form-control-sm[type="date"] {
     max-width: 120px;
-    /* Adjust date input width */
+
 }
 
 .list-group-item .form-check-input-sm {
@@ -83,9 +82,7 @@ textarea.form-control {
 
 .add-todo-form {
     overflow: hidden;
-    /* To enable smooth collapsing */
     max-height: 500px;
-    /* Initial max height, adjust as needed */
     transition: max-height 0.3s ease-in-out;
 }
 

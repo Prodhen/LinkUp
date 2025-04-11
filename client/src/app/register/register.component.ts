@@ -14,12 +14,7 @@ export class RegisterComponent {
   private accountService = inject(AccountService);
   private toastr = inject(ToastrService);
   cancelRegister = output<boolean>();
-  // model = {
-  //   username: '',
-  //   password: '',
-  //   picture: null
-  // }
-
+ 
   model: any = { }
 
   onFileSelected(event: any) {
