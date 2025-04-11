@@ -6,12 +6,13 @@ import { AccountService } from '../_service/account.service';
 import { environment } from '../../environment/environment';
 import { ToastrService } from 'ngx-toastr';
 
+
 interface TodoItem {
   id: number;
   title: string;
   description?: string | null;
   isCompleted?: boolean | null;
-  dueDate?: Date | null;
+  dueDate?: string | null;
   completedDate?: Date | null;
   userId: number;
 }
@@ -26,7 +27,7 @@ interface TodoItemUpdateDto {
   id: number;
   title: string;
   description?: string | null;
-  dueDate?: Date | null;
+  dueDate?: string | null;
   isCompleted?: boolean | null;
 }
 
@@ -44,6 +45,7 @@ export class TodoComponent implements OnInit {
   editedTodo: TodoItemUpdateDto = { id: 0, title: '', description: null, dueDate: null, isCompleted: false };
   private http = inject(HttpClient);
   private toastr = inject(ToastrService);
+
   private apiUrl = environment.apiUrl + '/api/' + 'todos';
   private accountService = inject(AccountService);
   isAddTodoVisible: boolean = false;
@@ -72,8 +74,9 @@ export class TodoComponent implements OnInit {
         next: (response) => {
           this.todos.unshift(response); // Add new todo to the beginning of the list
           this.newTodo = { title: '', description: null, dueDate: null }; // Clear the form
-          this.toastr.success('Todo added successfully!', 'Success');
           this.loadTodos();
+          this.toastr.success('Todo added successfully!', 'Success');
+
         },
         error: (error) => {
           console.error('Error adding todo:', error);
@@ -119,11 +122,28 @@ export class TodoComponent implements OnInit {
       id: todo.id,
       title: todo.title,
       description: todo.description,
-      dueDate: todo.dueDate,
+      dueDate: this.formatDateForInput(todo.dueDate),
       isCompleted: todo.isCompleted,
     };
   }
 
+
+  private formatDateForInput(date: Date | string | null | undefined): string {
+    if (!date) return '';
+
+
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date;
+    }
+
+    const jsDate = new Date(date);
+    return jsDate.toISOString().split('T')[0];
+  }
+
+
+  private parseDateFromInput(dateString: string): Date | null {
+    return dateString ? new Date(dateString) : null;
+  }
   saveEditedTodo(): void {
     if (this.editingTodo) {
       this.http.put(`${this.apiUrl}/Update`, this.editedTodo, this.getAuthHeaders()).subscribe({
@@ -133,6 +153,7 @@ export class TodoComponent implements OnInit {
             this.todos[index] = { ...this.todos[index], ...this.editedTodo };
           }
           this.editingTodo = null;
+          this.loadTodos();
         },
         error: (error) => {
           console.error('Error updating todo:', error);
@@ -154,4 +175,6 @@ export class TodoComponent implements OnInit {
     console.log("headers", headers);
     return { headers: headers };
   }
+
+
 }

@@ -5,6 +5,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { environment } from '../../environment/environment';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -15,6 +16,7 @@ import { environment } from '../../environment/environment';
 })
 export class NavComponent {
   private accountService = inject(AccountService);
+  private toastr = inject(ToastrService);
   model: any = {};
   loggedIn = false;
   private apiUrl = environment.apiUrl;
@@ -30,8 +32,22 @@ export class NavComponent {
         next: response => {
           console.log(response);
           this.loggedIn = true;
+
         },
-        error: error => console.log(error)
+        error: (err) => {
+          console.log(err);
+
+          if (err.error?.data && Array.isArray(err.error.data)) {
+            for (let msg of err.error.data) {
+              this.toastr.error(msg, 'Validation Error');
+            }
+          } else if (err.error?.message) {
+            this.toastr.error(err.error.message, 'Error');
+          } else {
+            this.toastr.error('Something went wrong', 'Error');
+          }
+        }
+
       }
     )
   }
