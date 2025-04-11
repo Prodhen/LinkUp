@@ -72,10 +72,11 @@ export class TodoComponent implements OnInit {
     if (this.newTodo.title.trim()) {
       this.http.post<TodoItem>(`${this.apiUrl}/add`, this.newTodo, this.getAuthHeaders()).subscribe({
         next: (response) => {
-          this.todos.unshift(response); // Add new todo to the beginning of the list
-          this.newTodo = { title: '', description: null, dueDate: null }; // Clear the form
+          this.todos.unshift(response);
+          this.newTodo = { title: '', description: null, dueDate: null };
           this.loadTodos();
           this.toastr.success('Todo added successfully!', 'Success');
+          this.isAddTodoVisible = false;
 
         },
         error: (error) => {
@@ -141,9 +142,7 @@ export class TodoComponent implements OnInit {
   }
 
 
-  private parseDateFromInput(dateString: string): Date | null {
-    return dateString ? new Date(dateString) : null;
-  }
+
   saveEditedTodo(): void {
     if (this.editingTodo) {
       this.http.put(`${this.apiUrl}/Update`, this.editedTodo, this.getAuthHeaders()).subscribe({
