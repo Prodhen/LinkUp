@@ -1,6 +1,6 @@
 <app-nav></app-nav>
 <div class="container" style="margin-top: 100px;">
-    <ul>
+    <!-- <ul>
         @for(user of users;track user.id){
         <li>
             {{user.id}} - {{user.userName}}
@@ -9,6 +9,9 @@
         }
 
 
-    </ul>
+    </ul> -->
+    <div class="container" style="margin-top: 100px;">
+        <router-outlet></router-outlet>
+    </div>
 
 </div>
