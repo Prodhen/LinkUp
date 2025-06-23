@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
   title = 'LinkUp';
   //constructor(private httpClient:HttpClient){}
   ngOnInit(): void {
- 
+
     this.setCurrentUser();
   }
   setCurrentUser() {
@@ -27,5 +27,5 @@ export class AppComponent implements OnInit {
     const user = JSON.parse(userString);
     this.accountService.currentUser.set(user);
   }
- 
+
 }
