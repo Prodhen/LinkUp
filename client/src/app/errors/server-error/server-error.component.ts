@@ -9,10 +9,10 @@ import { Route, Router } from '@angular/router';
   styleUrl: './server-error.component.css'
 })
 export class ServerErrorComponent {
-  error:any;
-  constructor(private router:Router){
-    const navigation=this.router.getCurrentNavigation();
-    this.error=navigation?.extras.state?.['error']
+  error: any;
+  constructor(private router: Router) {
+    const navigation = this.router.getCurrentNavigation();
+    this.error = navigation?.extras.state?.['error']
 
   }
 
