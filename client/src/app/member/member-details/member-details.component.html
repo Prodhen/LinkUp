@@ -1,1 +1,55 @@
-<p>member-details works!</p>
+@if(member){
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <img src="{{member.photoUrl}}" alt="{{member.knownAs}}">
+            <div class="card-body">
+                <div>
+                    <strong>Location:</strong>
+                    <p>{{member.city}},{{member.country}}</p>
+
+
+                </div>
+                <div>
+                    <strong>Age:</strong>
+                    <p>{{member.age}}</p>
+
+
+                </div>
+                <div>
+                    <strong>last Activate:</strong>
+                    <p>{{member.lastActive}}</p>
+
+
+                </div>
+
+                <div>
+                    <strong>Member Since:</strong>
+                    <p>{{member.created}}</p>
+
+
+                </div>
+
+
+
+            </div>
+            <div class="card-footer">
+                <div class="btn-group d-flex">
+                    <button class="btn btn-primary">
+                        like
+                    </button>
+                    <button class="btn btn-success">
+                        Message
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
