@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { Member } from '../../_models/member';
 import { AccountService } from '../../_services/account.service';
 import { MembersService } from '../../_services/members.service';
@@ -19,10 +19,22 @@ export class MemberEditComponent implements OnInit {
   private accountService = inject(AccountService);
   private memberService = inject(MembersService);
   private toastr = inject(ToastrService);
+  // This will prompt the user if they try to navigate away with unsaved changes
+  @HostListener('window:beforeunload', ['$event']) notify(events: any) {
+    if (this.editForm?.dirty) {
+      events.returnValue = true;
+    }
+  }
+
+
+
   ngOnInit(): void {
     this.loadMember();
 
   }
+
+
+
   loadMember() {
     const user = this.accountService.currentUser();
     if (!user) return;

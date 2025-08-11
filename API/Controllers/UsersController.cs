@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.Data;
 using API.DTOs;
 using API.Entities;
@@ -45,5 +46,33 @@ namespace API.Controllers
             if (user == null) return NotFound();
             return user;
         }
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdatesDto memberUpdatesDto)
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (username == null)
+            {
+                return BadRequest("No username found in token");
+            }
+
+            var user = await _userRepository.GetUserByUserNameAsync(username);
+
+            if (user == null)
+            {
+                return BadRequest("Could not find user");
+            }
+
+            _mapper.Map(memberUpdatesDto, user);
+            _userRepository.Update(user);
+
+            if (await _userRepository.SaveAllAsync())
+            {
+                return NoContent();
+            }
+
+            return BadRequest("Failed to update the user");
+        }
+
     }
 }
