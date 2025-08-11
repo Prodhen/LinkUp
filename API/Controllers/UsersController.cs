@@ -71,7 +71,7 @@ namespace API.Controllers
                 return NoContent();
             }
 
-            return BadRequest("Failed to update the user");
+            return BadRequest("Failed to update the user due to internal error");
         }
 
     }
