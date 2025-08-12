@@ -19,13 +19,12 @@ project.fragment.lock.json
 # ASP.NET
 wwwroot/node_modules/
 wwwroot/lib/
-appsettings*.json
+
 
 # ---- Angular / Node ----
 node_modules/
 dist/
 tmp/
-angular.json
 package-lock.json
 .env
 *.tsbuildinfo

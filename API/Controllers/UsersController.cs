@@ -68,10 +68,10 @@ namespace API.Controllers
 
             if (await _userRepository.SaveAllAsync())
             {
-                return NoContent();
+                return NoContent(); 
             }
 
-            return BadRequest("Failed to update the user");
+            return BadRequest("Failed  to update the user due to internal error-test-git");
         }
 
     }
