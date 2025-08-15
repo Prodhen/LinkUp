@@ -90,8 +90,7 @@
 
             </tab>
             <tab heading="Edit Photos">
-                <p>Here you can edit your photos.</p>
-                <!-- Photo editing functionality goes here -->
+            <app-photo-editor [member]="member" (memberChange)="onMemberChange($event)"></app-photo-editor>
 
             </tab>
 

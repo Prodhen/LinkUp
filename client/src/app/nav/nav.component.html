@@ -29,6 +29,8 @@
 
         @if(accountService.currentUser()){
         <div dropdown class="dropdown">
+            <img class="me-2" src="{{accountService.currentUser()?.photoUrl || './assets/user.png'}}"
+                alt="User Main Image">
             <a dropdownToggle class="dropdown-toggle text-light text-decoration-none">welcome
                 {{accountService.currentUser()?.userName | titlecase}}</a>
             <div *dropdownMenu class="dropdown-menu">
