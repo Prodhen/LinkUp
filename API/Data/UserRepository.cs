@@ -1,6 +1,7 @@
 using System;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 using API.Interface;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -26,11 +27,13 @@ public class UserRepository : IUserRepository
        .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+    public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
     {
-        return await _context.Users
-         .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-         .ToListAsync();
+        var query = _context.Users
+              .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+              .AsQueryable();
+        return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+
     }
 
     public async Task<IEnumerable<AppUser>> GetUserAsync()
