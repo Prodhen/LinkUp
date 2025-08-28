@@ -14,7 +14,9 @@ RUN npm ci
 COPY . .
 
 # Build the application for production
-RUN npm run build -- --configuration production
+# ARG দিয়ে environment select
+ARG CONFIG=production
+RUN npm run build -- --configuration $CONFIG
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine AS runtime
