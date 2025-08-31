@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Create directory for SQLite database (Linkup.db)
-RUN mkdir -p /app/data
+# RUN mkdir -p /app/data
 
 # Set environment variables
 ENV ASPNETCORE_ENVIRONMENT=Development
