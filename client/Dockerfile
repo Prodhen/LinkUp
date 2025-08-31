@@ -1,4 +1,4 @@
-# Stage 1: Build the Angular application
+# Stage 1: Build Angular app
 FROM node:20-alpine AS build
 
 # Set working directory
@@ -10,28 +10,27 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy source code
+# Copy the rest of the source code
 COPY . .
 
-# Build the application for production
-# ARG দিয়ে environment select
+# Build Angular app
 ARG CONFIG=production
 RUN npm run build -- --configuration $CONFIG
 
-# Stage 2: Serve with nginx
-FROM nginx:alpine AS runtime
+# Stage 2: Run with Node.js (no nginx)
+FROM node:20-alpine AS runtime
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# Copy the built application from build stage
-COPY --from=build /app/dist/client/browser /usr/share/nginx/html
+# Install a simple static server for Angular
+RUN npm install -g http-server
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy built Angular app from build stage
+COPY --from=build /app/dist/client/browser /app
 
-# Expose port 80
-EXPOSE 80
+# Expose port
+EXPOSE 4200
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start http-server
+CMD ["http-server", "-p", "80"]
+#CMD ["http-server", "-p", "4200"] there is no problem.
