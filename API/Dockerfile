@@ -26,7 +26,8 @@ COPY --from=build /app/publish .
 # RUN mkdir -p /app/data
 
 # Set environment variables
-ENV ASPNETCORE_ENVIRONMENT=Development
+ARG CONFIG=Development
+ENV ASPNETCORE_ENVIRONMENT=$CONFIG
 ENV ASPNETCORE_URLS=http://+:80
 
 # Expose port 80
