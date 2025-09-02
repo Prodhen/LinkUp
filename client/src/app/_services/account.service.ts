@@ -9,14 +9,14 @@ import { environment } from '../../environments/environment';
 })
 export class AccountService {
   private http = inject(HttpClient);
-  baseUrl = environment.apiUrl; 
+  baseUrl = environment.apiUrl;
   currentUser = signal<User | null>(null);
 
   login(model: any) {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map(user => {
         if (user) {
-            this.setCurrentUser(user);
+          this.setCurrentUser(user);
         }
       })
     )
