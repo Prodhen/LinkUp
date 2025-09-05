@@ -20,12 +20,14 @@ services:
     image: postgres:15
     restart: always
     environment:
-    
+
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
       POSTGRES_DB: TestDB
     ports:
       - "5432:5432"
     volumes:
-
-      - ./db_data:/var/lib/postgresql/data # <--- এটি DB এর জন্য Bind Mount
+      - db-data-named:/var/lib/postgresql/data # This refers to the named volume defined below
+volumes:
+  db-data-named:
+    
