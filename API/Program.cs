@@ -17,16 +17,17 @@ builder.Services.AddIdentityServices(builder.Configuration);
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200","http://localhost:3000", "https://localhost:3000"));
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200", "http://localhost:3000", "https://localhost:3000"));
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 using var scop = app.Services.CreateScope();
 var services = scop.ServiceProvider;
+Console.WriteLine(">>>> Current ENV: " + builder.Environment.EnvironmentName);
 try
 {
     var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync(); 
+    await context.Database.MigrateAsync();
     await Seed.SeedUser(context);
 }
 catch (Exception ex)

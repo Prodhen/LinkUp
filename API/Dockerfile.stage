@@ -1,0 +1,30 @@
+# Development Dockerfile (Debugging)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+WORKDIR /app
+
+# Install debugger inside container
+RUN apt-get update \
+    && apt-get install -y unzip curl \
+    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+# Copy project file and restore dependencies
+COPY API.csproj ./
+RUN dotnet restore API.csproj
+
+# Copy source code
+COPY . .
+
+# Build in Debug mode (don't publish for debugging)
+RUN dotnet build API.csproj -c Debug
+
+# Set environment
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://+:80
+
+# Expose ports - 80 for app, 5005 for debugging
+EXPOSE 80
+EXPOSE 5005
+
+# For debugging, we need to keep the source files and run from build output
+# Run with debugger support
+ENTRYPOINT ["dotnet", "run", "--project", "API.csproj", "--configuration", "Debug", "--urls", "http://+:80"]
