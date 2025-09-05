@@ -28,3 +28,43 @@ EXPOSE 5005
 # For debugging, we need to keep the source files and run from build output
 # Run with debugger support
 ENTRYPOINT ["dotnet", "run", "--project", "API.csproj", "--configuration", "Debug", "--urls", "http://+:80"]
+
+
+# docker build -t api-dev-image -f Dockerfile.stage .
+# docker run -d --name api-dev-container -p 5000:80 -p 5005:5005 -v ${PWD}:/app api-dev-image:latest
+# {
+#     "version": "0.2.0",
+#     "configurations": [
+#         {
+#             "name": "C#: API Debug (Docker Attach)",
+#             "type": "coreclr",
+#             "request": "attach",
+#             "processId": "${command:pickRemoteProcess}",
+#             "pipeTransport": {
+#                 "pipeCwd": "${workspaceFolder}",
+#                 "pipeProgram": "docker",
+#                 "pipeArgs": [
+#                     "exec",
+#                     "-i",
+#                     "api-dev-container",
+#                     "/bin/bash",
+#                     "-c"
+#                 ],
+#                 "debuggerPath": "/vsdbg/vsdbg",
+#                 "pipeEnv": {
+#                     "DOTNET_ROOT": "/usr/share/dotnet"
+#                 }
+#             },
+#             "sourceFileMap": {
+#                 "/app": "D:\\LinkUp-V1\\LinkUp\\API"
+#             },
+#             "justMyCode": false,
+#             "requireExactSource": false,
+#             "enableStepFiltering": false,
+#             "logging": {
+#                 "moduleLoad": false,
+#                 "trace": true
+#             }
+#         }
+#     ]
+# }
