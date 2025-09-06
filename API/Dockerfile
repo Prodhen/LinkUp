@@ -35,3 +35,18 @@ EXPOSE 80
 
 # Set the entry point
 ENTRYPOINT ["dotnet", "API.dll"]
+
+# To create a Docker network, use the following command:
+# docker network create linkup-network
+
+# To create a named volume for PostgreSQL data persistence, use the following command:
+#docker volume create db-data-named
+
+# To run PostgreSQL container, use the following command:
+#docker run -d  --name db --network linkup-network -p 5432:5432 -e POSTGRES_USER=postgres -e 
+#POSTGRES_PASSWORD=12345 -e POSTGRES_DB=TestDB -v db-data-named:/var/lib/postgresql/data postgres:15
+
+# To build the Docker image, run:
+#  docker build -t my-api-image .        
+# To run the Docker container, run:
+#docker run -d -p 5000:80 --network linkup-network --name api my-api-image:latest

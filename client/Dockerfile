@@ -33,3 +33,7 @@ EXPOSE 80
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
+# To build the Docker image, run:
+#  docker build -t my-web-image .    
+# To run the Docker container, run:
+#docker run -d -p 4200:80 --network linkup-network --name client my-web-image:latest
