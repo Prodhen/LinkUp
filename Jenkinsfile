@@ -23,8 +23,7 @@ stages {
         }
 
         stage('API Build & Test') {
-
-              agent {
+            agent { // This 'agent' block is necessary
                 docker {
                     image 'mcr.microsoft.com/dotnet/sdk:8.0' // Use the .NET 8 SDK image
                     args '-u root' // Often necessary for permissions inside the container
