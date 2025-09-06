@@ -1,5 +1,10 @@
 pipeline {
-    agent any 
+    agent any {
+         docker {
+            image 'mcr.microsoft.com/dotnet/sdk:8.0' // Or the version you need
+            args '-u root' // Sometimes necessary for permissions
+        }
+    }
        tools {
         nodejs 'NodeJs20' // Use the name you configured
     }
