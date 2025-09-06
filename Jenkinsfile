@@ -1,10 +1,5 @@
 pipeline {
-    agent any {
-         docker {
-            image 'mcr.microsoft.com/dotnet/sdk:8.0' // Or the version you need
-            args '-u root' // Sometimes necessary for permissions
-        }
-    }
+    agent any 
        tools {
         nodejs 'NodeJs20' // Use the name you configured
     }
@@ -28,6 +23,13 @@ stages {
         }
 
         stage('API Build & Test') {
+
+              agent {
+                docker {
+                    image 'mcr.microsoft.com/dotnet/sdk:8.0' // Use the .NET 8 SDK image
+                    args '-u root' // Often necessary for permissions inside the container
+                }
+            }
             steps {
                 dir('API') { 
                     sh 'dotnet restore'
