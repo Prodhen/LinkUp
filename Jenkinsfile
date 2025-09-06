@@ -1,7 +1,7 @@
 pipeline {
     agent any 
        tools {
-        nodejs 'Nodejs20' // Use the name you configured
+        nodejs 'NodeJs20' // Use the name you configured
     }
 
 stages {
