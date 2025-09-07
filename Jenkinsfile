@@ -57,6 +57,12 @@ stages {
         }
 
         stage('Deploy on Local PC') {
+                    agent {
+                        docker {
+                            image 'docker/compose:latest'  # Official Docker Compose image
+                            args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
+                        }
+                    }
                     steps {
                          script {
                             sh """

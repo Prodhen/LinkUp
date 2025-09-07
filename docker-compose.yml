@@ -1,6 +1,6 @@
 services:
   client:
-    image: prodhen/linkup-client:latest # Jenkinsfile এ ব্যবহৃত ইমেজ নাম
+    image: aroshprodhen/linkup-client:latest # Jenkinsfile এ ব্যবহৃত ইমেজ নাম
     ports:
       - "4200:80"
     volumes:
@@ -8,7 +8,7 @@ services:
     depends_on:
       - api
   api:
-    image: prodhen/linkup-api:latest # Jenkinsfile এ ব্যবহৃত ইমেজ নাম
+    image: aroshprodhen/linkup-api:latest # Jenkinsfile এ ব্যবহৃত ইমেজ নাম
     ports:
       - "5000:80"
     environment:
