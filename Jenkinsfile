@@ -58,22 +58,21 @@ stages {
 
         stage('Deploy on Local PC') {
                     steps {
-                        script {
-                
-                            def projectPath = "/cygdrive/d/LinkUp-V1/LinkUp" 
+                         script {
                             sh """
                                 # Pull latest images
                                 docker pull aroshprodhen/linkup-client:latest
                                 docker pull aroshprodhen/linkup-api:latest
 
-                                # Change directory to where docker-compose.yml is located
-                                cd ${projectPath}
+                                # Change directory to workspace (where docker-compose.yml exists)
+                                cd ${WORKSPACE}
 
                                 # Stop and remove existing containers, then start new ones
                                 docker-compose down
                                 docker-compose up -d
                             """
                         }
+                 
                     }
         }
             
