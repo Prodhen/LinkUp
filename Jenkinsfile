@@ -59,7 +59,7 @@ stages {
         stage('Deploy on Local PC') {
                     agent {
                         docker {
-                            image 'docker/compose:2.38.1'  
+                            image 'docker:24.0'
                             args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
                         }
                     }
