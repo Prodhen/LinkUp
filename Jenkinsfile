@@ -8,20 +8,10 @@ stages {
         stage('Checkout Code') {
             steps {
 
-                git branch: 'main', credentialsId: 'github-pat-for-jenkins', url: 'https://github.com/Prodhen/LinkUp.git'
+                git branch: 'jenkins', credentialsId: 'github-pat-for-jenkins', url: 'https://github.com/Prodhen/LinkUp.git'
             }
         }
-
-        stage('Client Build & Test') {
-            steps {
-                dir('client') { 
-                    sh 'npm install'
-                    sh 'npm run build --prod'
-    
-                }
-            }
-        }
-
+        
         stage('API Build & Test') {
             agent { // This 'agent' block is necessary
                 docker {
@@ -37,6 +27,17 @@ stages {
                 }
             }
         }
+
+        stage('Client Build & Test') {
+            steps {
+                dir('client') { 
+                    sh 'npm install'
+                    sh 'npm run build --prod'
+    
+                }
+            }
+        }
+
 
         stage('Build & Push Docker Images') {
             steps {
