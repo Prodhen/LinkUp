@@ -8,7 +8,7 @@ stages {
         stage('Checkout Code') {
             steps {
 
-                git branch: 'jenkins', credentialsId: 'github-pat-for-jenkins', url: 'https://github.com/Prodhen/LinkUp.git'
+                git branch: 'main', credentialsId: 'github-pat-for-jenkins', url: 'https://github.com/Prodhen/LinkUp.git'
             }
         }
         
