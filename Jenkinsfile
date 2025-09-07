@@ -45,12 +45,12 @@ stages {
  
                     withDockerRegistry(credentialsId: 'docker-hub-credentials-id', url: 'https://index.docker.io/v1/') {
        
-                        sh "docker build -t prodhen/linkup-client:latest ./client"
-                        sh "docker push prodhen/linkup-client:latest"
+                        sh "docker build -t aroshprodhen/linkup-client:latest ./client"
+                        sh "docker push aroshprodhen/linkup-client:latest"
 
         
-                        sh "docker build -t prodhen/linkup-api:latest ./API"
-                        sh "docker push prodhen/linkup-api:latest"
+                        sh "docker build -t aroshprodhen/linkup-api:latest ./API"
+                        sh "docker push aroshprodhen/linkup-api:latest"
                     }
                 }
             }
@@ -63,8 +63,8 @@ stages {
                             def projectPath = "/cygdrive/d/LinkUp-V1/LinkUp" 
                             sh """
                                 # Pull latest images
-                                docker pull prodhen/linkup-client:latest
-                                docker pull prodhen/linkup-api:latest
+                                docker pull aroshprodhen/linkup-client:latest
+                                docker pull aroshprodhen/linkup-api:latest
 
                                 # Change directory to where docker-compose.yml is located
                                 cd ${projectPath}
