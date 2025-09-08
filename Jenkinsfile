@@ -44,24 +44,24 @@ pipeline {
             }
         }
 
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
-                }
-            }
-        }
+   
 
         stage('Build & Push Docker Images') {
-            steps {
-                bat """
-                docker build -t %DOCKER_IMAGE_CLIENT% ./client
-                docker push %DOCKER_IMAGE_CLIENT%
-                
-                docker build -t %DOCKER_IMAGE_API% ./API/publish
-                docker push %DOCKER_IMAGE_API%
-                """
-            }
+        steps {
+             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        // Login to Docker Hub
+                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+
+                        // Build and push client
+                        sh "docker build -t aroshprodhen/linkup-client:latest ./client"
+                        sh "docker push aroshprodhen/linkup-client:latest"
+
+                        // Build and push API
+                        sh "docker build -t aroshprodhen/linkup-api:latest ./API/publish"
+                        sh "docker push aroshprodhen/linkup-api:latest"
+                    }
+                }
         }
 
         stage('Deploy with Docker-Compose') {
