@@ -1,87 +1,93 @@
 pipeline {
-    agent any 
-       tools {
-        nodejs 'NodeJs20' // Use the name you configured
+    agent any
+
+    tools {
+        nodejs 'NodeJs20' // Name of NodeJS installation in Jenkins
     }
 
-stages {
+    environment {
+        DOCKER_IMAGE_CLIENT = 'aroshsprodhen/linkup-client:latest'
+        DOCKER_IMAGE_API    = 'aroshsprodhen/linkup-api:latest'
+    }
+
+    triggers {
+        // Trigger build on GitHub push
+        githubPush()
+    }
+
+    stages {
+
         stage('Checkout Code') {
             steps {
-
-                git branch: 'Jenkins', credentialsId: 'github-pat-for-jenkins', url: 'https://github.com/Prodhen/LinkUp.git'
+                git branch: 'Jenkins', 
+                    credentialsId: 'jenkins-ci-cd-token', 
+                    url: 'https://github.com/Prodhen/LinkUp.git'
             }
         }
-        
-        stage('API Build & Test') {
-            agent { // This 'agent' block is necessary
-                docker {
-                    image 'mcr.microsoft.com/dotnet/sdk:8.0' // Use the .NET 8 SDK image
-                    args '-u root' // Often necessary for permissions inside the container
-                }
-            }
+
+        stage('Build API') {
             steps {
-                dir('API') { 
-                    sh 'dotnet restore'
-                    sh 'dotnet build --configuration Release --no-restore'
-         
+                dir('API') {
+                    bat 'dotnet restore'
+                    bat 'dotnet build --configuration Release --no-restore'
+                    bat 'dotnet publish -c Release -o publish'
                 }
             }
         }
 
-        stage('Client Build & Test') {
+        stage('Build Client') {
             steps {
-                dir('client') { 
-                    sh 'npm install'
-                    sh 'npm run build --prod'
-    
+                dir('client') {
+                    bat 'npm install'
+                    bat 'npm run build --prod'
                 }
             }
         }
 
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                }
+            }
+        }
 
         stage('Build & Push Docker Images') {
             steps {
-                script {
- 
-                    withDockerRegistry(credentialsId: 'docker-hub-credentials-id', url: 'https://index.docker.io/v1/') {
-       
-                        sh "docker build -t aroshprodhen/linkup-client:latest ./client"
-                        sh "docker push aroshprodhen/linkup-client:latest"
-
-        
-                        sh "docker build -t aroshprodhen/linkup-api:latest ./API"
-                        sh "docker push aroshprodhen/linkup-api:latest"
-                    }
-                }
+                bat """
+                docker build -t %DOCKER_IMAGE_CLIENT% ./client
+                docker push %DOCKER_IMAGE_CLIENT%
+                
+                docker build -t %DOCKER_IMAGE_API% ./API/publish
+                docker push %DOCKER_IMAGE_API%
+                """
             }
         }
 
-        stage('Deploy on Local PC') {
-                    agent {
-                        docker {
-                            image 'docker:24.0'
-                            args '-v /var/run/docker.sock:/var/run/docker.sock -u root'
-                        }
-                    }
-                    steps {
-                         script {
-                            sh """
-                                # Pull latest images
-                                docker pull aroshprodhen/linkup-client:latest
-                                docker pull aroshprodhen/linkup-api:latest
-
-                                # Change directory to workspace (where docker-compose.yml exists)
-                                cd ${WORKSPACE}
-
-                                # Stop and remove existing containers, then start new ones
-                                docker-compose down
-                                docker-compose up -d
-                            """
-                        }
-                 
-                    }
+        stage('Deploy with Docker-Compose') {
+            steps {
+                dir("${WORKSPACE}") {
+                    bat """
+                    docker pull %DOCKER_IMAGE_CLIENT%
+                    docker pull %DOCKER_IMAGE_API%
+                    
+                    docker-compose down
+                    docker-compose up -d --build
+                    """
+                }
+            }
         }
-            
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished!'
+        }
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
 }
-} 
-        
