@@ -43,7 +43,6 @@ public class AccountController : BaseApiController
             Token = _tokenService.CreateToken(user),
             KnownAs = user.KnownAs
         };
-
     }
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
@@ -58,7 +57,6 @@ public class AccountController : BaseApiController
         {
             if (computedHash[i] != user.PassWordHash[i]) return Unauthorized("Invalid password");
         }
-
         return new UserDto
         {
             UserName = user.UserName,
@@ -71,7 +69,6 @@ public class AccountController : BaseApiController
     private async Task<bool> UserExists(string userName)
     {
         return await _context.Users.AnyAsync(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim());
-
     }
 
 }

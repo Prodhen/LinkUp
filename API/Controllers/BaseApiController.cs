@@ -6,5 +6,6 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class BaseApiController:ControllerBase
 {
+    //base controller for other controllers to inherit from
 
 }
