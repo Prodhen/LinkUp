@@ -46,20 +46,21 @@ pipeline {
 
         stage('Build & Push Docker Images') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                  withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         script {
-                            // Login to Docker Hub
-                            sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                            // Docker login on Windows (bat instead of sh)
+                            bat """
+                            echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                            """
 
                             // Build and push client
-                            sh "docker build -t aroshprodhen/linkup-client:latest ./client"
-                            sh "docker push aroshprodhen/linkup-client:latest"
+                            bat "docker build -t aroshprodhen/linkup-client:latest ./client"
+                            bat "docker push aroshprodhen/linkup-client:latest"
 
                             // Build and push API
-                            sh "docker build -t aroshprodhen/linkup-api:latest ./API/publish"
-                            sh "docker push aroshprodhen/linkup-api:latest"
+                            bat "docker build -t aroshprodhen/linkup-api:latest ./API/publish"
+                            bat "docker push aroshprodhen/linkup-api:latest"
                         }
-                    }
             }
         }
 
