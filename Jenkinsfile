@@ -57,7 +57,7 @@ pipeline {
                             bat "docker push aroshprodhen/linkup-client:latest"
 
                             // Build and push API
-                            bat "docker build -t aroshprodhen/linkup-api:latest -f ./API/Dockerfile ./API/publish"
+                            bat "docker build -t aroshprodhen/linkup-api:latest ./API"
                             bat "docker push aroshprodhen/linkup-api:latest"
                         }
                     }

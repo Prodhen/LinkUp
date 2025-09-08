@@ -2,33 +2,22 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj file and restore dependencies
-COPY API/API.csproj ./API/
-RUN dotnet restore ./API/API.csproj
+# Copy csproj and restore
+COPY API.csproj ./
+RUN dotnet restore API.csproj
 
-# Copy the rest of the source code
-COPY API/. ./API/
+# Copy everything else
+COPY . .
 
-# Build the application
-RUN dotnet build ./API/API.csproj -c Release -o /app/build
+# Build
+RUN dotnet build API.csproj -c Release -o /app/build
 
-# Publish the application
-RUN dotnet publish ./API/API.csproj -c Release -o /app/publish
+# Publish
+RUN dotnet publish API.csproj -c Release -o /app/publish
 
-# Use the runtime image for the final stage
+# Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-
-# Copy the published application
 COPY --from=build /app/publish .
-
-# Set environment variables
-ARG CONFIG=Production
-ENV ASPNETCORE_ENVIRONMENT=$CONFIG
-ENV ASPNETCORE_URLS=http://+:80
-
-# Expose port 80
 EXPOSE 80
-
-# Set the entry point
 ENTRYPOINT ["dotnet", "API.dll"]
