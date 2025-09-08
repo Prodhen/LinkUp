@@ -43,10 +43,9 @@ pipeline {
                 }
             }
         }
-
         stage('Build & Push Docker Images') {
-            steps {
-                  withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                steps {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         script {
                             // Docker login on Windows (bat instead of sh)
                             bat """
@@ -61,9 +60,11 @@ pipeline {
                             bat "docker build -t aroshprodhen/linkup-api:latest ./API/publish"
                             bat "docker push aroshprodhen/linkup-api:latest"
                         }
-            }
-        }
-    }
+                    }
+                }
+      }
+
+    
 
         stage('Deploy with Docker-Compose') {
             steps {
