@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (use npm install instead of npm ci for Docker)
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -23,7 +23,8 @@ FROM nginx:alpine AS runtime
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy the built application from build stage
-COPY --from=build /app/dist/client/browser /usr/share/nginx/html
+# Update the path to match Angular's default output folder
+COPY --from=build /app/dist/client /usr/share/nginx/html
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
