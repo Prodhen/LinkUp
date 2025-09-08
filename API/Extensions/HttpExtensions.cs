@@ -19,9 +19,7 @@ public static class HttpExtensions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
-
         response.Headers.Append("Pagination", JsonSerializer.Serialize(paginationHeader, jsonOptions));
-
         response.Headers.Append("Access-Control-Expose-Headers", "Pagination");
     }
 
