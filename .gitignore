@@ -34,3 +34,4 @@ package-lock.json
 Thumbs.db
 client/node_modules/
 client/dist/
+db_data/
