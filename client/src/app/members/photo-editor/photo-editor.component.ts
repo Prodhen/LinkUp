@@ -33,11 +33,11 @@ export class PhotoEditorComponent implements OnInit {
   fileOverBase(e: any) {
     this.hasBaseDropZoneOver = e;
   }
-  deletePhoto(photo: Photo) {
-    this.memberService.deletePhoto(photo).subscribe({
+  deletePhoto(photoId: number) {
+    this.memberService.deletePhoto(photoId).subscribe({
       next: _ => {
         const updatedMember = { ...this.member() };
-        updatedMember.photos = updatedMember.photos.filter(x => x.id !== photo.id);
+        updatedMember.photos = updatedMember.photos.filter(x => x.id !== photoId);
         this.memberChange.emit(updatedMember);
       }
     })
