@@ -1,9 +1,11 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { Injectable, inject, model, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Member } from '../_models/member';
 import { of, tap } from 'rxjs';
 import { Photo } from '../_models/Photo';
+import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
 import { PaginatedResult } from '../_models/pagination';
 
 @Injectable({
@@ -16,13 +18,14 @@ export class MembersService {
   paginatedResults = signal<PaginatedResult<Member[]> | null>(null);
 
 
-  getMembers(pageNumber?: number, pageSize?: number) {
+  getMembers(userParams: UserParams) {
 
-    let params = new HttpParams();
-    if (pageNumber && pageSize) {
-      params = params.append('pageNumber', pageNumber);
-      params = params.append('pageSize', pageSize);
-    }
+    let params = this.setPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+
+    params = params.append('minAge', userParams.minAge);
+    params = params.append('maxAge', userParams.maxAge);
+    params = params.append('gender', userParams.gender);
+    params = params.append('orderBy', userParams.orderBy);
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).subscribe({
       next: response => {
         this.paginatedResults.set({
@@ -33,17 +36,17 @@ export class MembersService {
     });
 
 
-    if (this.members().length > 0) {
+  }
 
-      return of(this.members());
+  private setPaginationHeaders(pageNumber: number, pageSize: number) {
+    let params = new HttpParams();
+
+    if (pageNumber && pageSize) {
+      params = params.append('pageNumber', pageNumber);
+      params = params.append('pageSize', pageSize);
     }
-    return this.http.get<Member[]>(this.baseUrl + 'users').pipe(
-      tap(members => {
 
-        this.members.set(members);
-      })
-    );
-
+    return params;
   }
 
   getMember(username: string) {
