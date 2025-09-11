@@ -6,11 +6,12 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { UserParams } from '../../_models/userParams';
 import { AccountService } from '../../_services/account.service';
 import { FormsModule } from '@angular/forms';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 @Component({
   selector: 'app-member-list',
   standalone: true,
-  imports: [MemberCardComponent, NgFor, PaginationModule, NgIf, FormsModule],
+  imports: [MemberCardComponent, NgFor, PaginationModule, NgIf, FormsModule, ButtonsModule],
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.css'
 })
