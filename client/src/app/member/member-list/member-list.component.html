@@ -3,3 +3,15 @@
         <app-member-card [member]="member"></app-member-card>
     </div>
 </div>
+@if(memberService.paginatedResults()?.pagination){
+<pagination [boundaryLinks]="true" [totalItems]="memberService.paginatedResults()?.pagination!.totalItems"
+    [itemsPerPage]="memberService.paginatedResults()?.pagination!.itemsPerPage" 
+    [maxSize]="10"
+
+    (pageChanged)="pageChanged($event)"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+
+</pagination>
+
+}
