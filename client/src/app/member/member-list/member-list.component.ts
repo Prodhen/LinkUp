@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { MembersService } from '../../_services/members.service';
-import { Member } from '../../_models/member';
 import { MemberCardComponent } from '../../members/member-card/member-card.component';
 import { NgFor, NgIf } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { UserParams } from '../../_models/userParams';
+import { AccountService } from '../../_services/account.service';
 
 @Component({
   selector: 'app-member-list',
@@ -13,10 +14,12 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   styleUrl: './member-list.component.css'
 })
 export class MemberListComponent implements OnInit {
+  private accountService = inject(AccountService);
   memberService = inject(MembersService);
-  //members: Member[] = [];
-  pageNumber = 1;
-  pageSize = 5;
+  userParams = new UserParams(this.accountService.currentUser());
+
+
+
   ngOnInit(): void {
     if (!this.memberService.paginatedResults()) {
       this.loadMembers();
@@ -24,11 +27,11 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
-    this.memberService.getMembers(this.pageNumber, this.pageSize);
+    this.memberService.getMembers(this.userParams);
   }
   pageChanged(event: any) {
-    if (this.pageNumber !== event.page) {
-      this.pageNumber = event.page;
+    if (this.userParams.pageNumber !== event.page) {
+      this.userParams.pageNumber = event.page;
       this.loadMembers();
     }
   }
