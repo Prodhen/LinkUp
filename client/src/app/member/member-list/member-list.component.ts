@@ -2,13 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MembersService } from '../../_services/members.service';
 import { Member } from '../../_models/member';
 import { MemberCardComponent } from '../../members/member-card/member-card.component';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-member-list',
   standalone: true,
-  imports: [MemberCardComponent, NgFor, PaginationModule],
+  imports: [MemberCardComponent, NgFor, PaginationModule, NgIf],
   templateUrl: './member-list.component.html',
   styleUrl: './member-list.component.css'
 })
