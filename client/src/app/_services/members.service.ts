@@ -14,11 +14,16 @@ import { PaginatedResult } from '../_models/pagination';
 export class MembersService {
   private http = inject(HttpClient);
   baseUrl = environment.apiUrl;
-  members = signal<Member[]>([]);
   paginatedResults = signal<PaginatedResult<Member[]> | null>(null);
+  memberCache = new Map();
 
 
   getMembers(userParams: UserParams) {
+    const response = this.memberCache.get(Object.values(userParams).join('-'));
+    if (response) {
+      this.paginatedResults.set(response);
+      return of(response);
+    }
 
     let params = this.setPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 
@@ -28,16 +33,19 @@ export class MembersService {
     params = params.append('orderBy', userParams.orderBy);
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).subscribe({
       next: response => {
-        this.paginatedResults.set({
-          items: response.body as Member[], // Type assertion
-          pagination: JSON.parse(response.headers.get('Pagination')!)
-        });
+       this.setPaginatedResponse(response);
+        this.memberCache.set(Object.values(userParams).join('-'), response);
       }
     });
 
 
   }
-
+ private setPaginatedResponse(response: HttpResponse<Member[]>) {
+ this.paginatedResults.set({
+          items: response.body as Member[], // Type assertion
+          pagination: JSON.parse(response.headers.get('Pagination')!)
+        });
+ }
   private setPaginationHeaders(pageNumber: number, pageSize: number) {
     let params = new HttpParams();
 
