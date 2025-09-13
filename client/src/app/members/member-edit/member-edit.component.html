@@ -30,14 +30,14 @@
                 </div>
                 <div>
                     <strong>last Activate:</strong>
-                    <p>{{member.lastActive}}</p>
+                    <p>{{member.lastActive |timeago}}</p>
 
 
                 </div>
 
                 <div>
                     <strong>Member Since:</strong>
-                    <p>{{member.created}}</p>
+                    <p>{{member.created |date:'longDate'}}</p>
 
 
                 </div>
@@ -90,7 +90,7 @@
 
             </tab>
             <tab heading="Edit Photos">
-            <app-photo-editor [member]="member" (memberChange)="onMemberChange($event)"></app-photo-editor>
+                <app-photo-editor [member]="member" (memberChange)="onMemberChange($event)"></app-photo-editor>
 
             </tab>
 
