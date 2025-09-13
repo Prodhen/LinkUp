@@ -24,8 +24,6 @@ export class MemberListComponent implements OnInit {
     { value: 'female', display: 'Females' }
   ];
 
-
-
   ngOnInit(): void {
     if (!this.memberService.paginatedResults()) {
       this.loadMembers();
@@ -33,17 +31,35 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
-    this.memberService.getMembers(this.userParams);
+    console.log("Loading members with params:", this.memberService.userParams());
+    this.memberService.getMembers();
   }
+  filterParams = {
+    gender: this.memberService.userParams().gender,
+    minAge: this.memberService.userParams().minAge,
+    maxAge: this.memberService.userParams().maxAge,
+    pageNumber: this.memberService.userParams().pageNumber,
+    pageSize: this.memberService.userParams().pageSize,
+    orderBy: this.memberService.userParams().orderBy
+  };
+  applyFilters() {
+
+
+    // Merge only filterable fields; required fields stay intact
+    const currentParams = this.memberService.userParams(); // Get the current value of the signal
+    this.memberService.userParams.set({ ...currentParams }); // Create a new object with current 
+    console.log(currentParams);
+    this.loadMembers();
+  }
+
   resetFilters() {
-    if (this.accountService.currentUser()) {
-      this.userParams = new UserParams(this.accountService.currentUser()!);
-      this.loadMembers();
-    }
+    this.memberService.resetUserParams();
+    this.loadMembers();
   }
+
   pageChanged(event: any) {
-    if (this.userParams.pageNumber !== event.page) {
-      this.userParams.pageNumber = event.page;
+    if (this.memberService.userParams().pageNumber !== event.page) {
+      this.memberService.userParams().pageNumber = event.page;
       this.loadMembers();
     }
   }
