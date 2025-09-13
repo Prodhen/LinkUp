@@ -33,19 +33,19 @@ export class MembersService {
     params = params.append('orderBy', userParams.orderBy);
     return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).subscribe({
       next: response => {
-       this.setPaginatedResponse(response);
+        this.setPaginatedResponse(response);
         this.memberCache.set(Object.values(userParams).join('-'), response);
       }
     });
 
 
   }
- private setPaginatedResponse(response: HttpResponse<Member[]>) {
- this.paginatedResults.set({
-          items: response.body as Member[], // Type assertion
-          pagination: JSON.parse(response.headers.get('Pagination')!)
-        });
- }
+  private setPaginatedResponse(response: HttpResponse<Member[]>) {
+    this.paginatedResults.set({
+      items: response.body as Member[], // Type assertion
+      pagination: JSON.parse(response.headers.get('Pagination')!)
+    });
+  }
   private setPaginationHeaders(pageNumber: number, pageSize: number) {
     let params = new HttpParams();
 
@@ -58,7 +58,10 @@ export class MembersService {
   }
 
   getMember(username: string) {
-
+    const member: Member = [...this.memberCache.values()]
+      .reduce((arr, elem) => arr.concat(elem.body), [] as Member[])
+      .find((m: Member) => m.userName === username);
+    if (member) return of(member);
 
     return this.http.get<Member>(this.baseUrl + 'users/' + username);
   }
